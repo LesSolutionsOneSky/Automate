@@ -1,7 +1,7 @@
 $DirectoryToCreate = "C:\temp"
 
 <# install Net Frame 4.8#>
-$DownloadNET = "https://github.com/Underbee/Automate_Deploy/raw/main/dotNetFx35setup.exe"
+$DownloadNET = "https://github.com/LesSolutionOneSky/Automate/raw/main/dotNetFx35setup.exe"
 $SoftwareNETPath = "C:\Temp\Netframe.exe"
 if (-not (Test-Path -LiteralPath $DirectoryToCreate)) {
     mkdir "C:\temp"
@@ -19,7 +19,7 @@ Write-Host -Fore Red "Errorcode: " $process.ExitCode
 <# End of NetFrame Work Install #>
 
 <# Install Automate#>
-$DownloadPath = "https://github.com/Underbee/Automate_Deploy/raw/main/Agent_Install.exe"
+$DownloadPath = "https://github.com/LesSolutionOneSky/Automate/raw/main/Agent_Install.exe"
 $SoftwarePath = "C:\Temp\Automate_Agent.exe"
 
     Write-Host "Downloading from: $($DownloadPath)"
