@@ -1,4 +1,8 @@
-Screen connect
+The following are the instruction to deploy Automate Agent on Workstations;
+
+these are both Powershell functions calling the script from this repository
+
+Screenconnect Deployment
 =================
 #!ps 
 #timeout=900000 
@@ -6,6 +10,6 @@ Screen connect
 Invoke-Expression(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/LesSolutionOneSky/Automate/main/Deploy.ps1')
 
 
-POwershell
+Powershell Command
 =================
 Invoke-Expression(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/LesSolutionOneSky/Automate/main/Deploy.ps1')
