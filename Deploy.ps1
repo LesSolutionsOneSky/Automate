@@ -32,12 +32,5 @@ $InstallExitCode = (Start-Process -FilePath $SoftwarePath -ArgumentList "/quiet 
 If ($InstallExitCode -eq 0) {
     If (!$Silent) {Write-Verbose "The Automate Agent Installer Executed Without Errors"}
 } Else {
-    Write-Host "Automate Installer Exit Code: $InstallExitCode" -ForegroundColor Red
-    Write-Host "Automate Installer Logs: $LogFullPath" -ForegroundColor Red
-    Write-Host "The Automate MSI failed. Waiting 15 Seconds..." -ForegroundColor Red
-    $Date = (get-date -UFormat %Y-%m-%d_%H-%M-%S)
-    $LogFullPath = "$env:windir\Temp\Automate_Agent_$Date.log"
-    $InstallExitCode = (Start-Process -FilePath $SoftwarePath -ArgumentList "/quiet /norestart" -Wait -Verb RunAs -PassThru)
-    Write-Host "Automate Installer Exit Code: $InstallExitCode" -ForegroundColor Yellow
-    Write-Host "Automate Installer Logs: $LogFullPath" -ForegroundColor Yellow
+    Write-Verbose "The Automate Agent Installer Executed With Errors!"
 }# End Else
