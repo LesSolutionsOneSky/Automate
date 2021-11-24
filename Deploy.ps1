@@ -28,9 +28,5 @@ $SoftwarePath = "C:\Temp\Automate_Agent.exe"
         $WebClient.DownloadFile($DownloadPath, $SoftwarePath)
     Write-Host "Download Complete"
 
-$InstallExitCode = (Start-Process -FilePath $SoftwarePath -ArgumentList "/quiet /norestart" -Wait -Verb RunAs -PassThru)
-If ($InstallExitCode -eq 0) {
-    If (!$Silent) {Write-Verbose "The Automate Agent Installer Executed Without Errors"}
-} Else {
-    Write-Verbose "The Automate Agent Installer Executed With Errors!"
-}# End Else
+Start-Process -FilePath $SoftwarePath -ArgumentList "/quiet /norestart" -Wait -Verb RunAs -PassThru
+
