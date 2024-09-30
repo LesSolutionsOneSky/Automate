@@ -7,6 +7,7 @@ Screenconnect Deployment
 #!ps 
 #timeout=900000 
 #maxlength=9000000 
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 Invoke-Expression(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/LesSolutionsOneSky/Automate/main/Deploy.ps1')
 
 
