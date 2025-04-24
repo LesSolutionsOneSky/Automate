@@ -36,3 +36,7 @@ chmod +x install.sh
 ps -ax | grep ltech
 
 service ltechagent status
+
+service ltechagent start
+
+service ltechagent enable
