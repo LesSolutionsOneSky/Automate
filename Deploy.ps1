@@ -28,5 +28,5 @@ $SoftwarePath = "C:\Temp\Automate_Agent.msi"
         $WebClient.DownloadFile($DownloadPath, $SoftwarePath)
     Write-Host "Download Complete"
 
-Start-Process -FilePath $SoftwarePath -ArgumentList "/quiet /norestart" -Wait -Verb RunAs -PassThru
+Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$SoftwarePath`" /quiet /norestart" -Wait -Verb RunAs -PassThru
 
