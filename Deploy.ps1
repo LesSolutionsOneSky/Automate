@@ -19,8 +19,9 @@ Try {
     Write-Host "Downloading Automate ZIP..."
     Invoke-WebRequest -Uri $DownloadUrl -OutFile $ZipPath -UseBasicParsing
 
-    Write-Host "Extracting ZIP..."
-    Expand-Archive -Path $ZipPath -DestinationPath $ExtractPath -Force
+    Write-Host "Extracting ZIP with .NET..."
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractPath)
 
     Write-Host "Looking for batch file..."
     $BatFile = Get-ChildItem -Path $ExtractPath -Filter *.bat | Select-Object -First 1
@@ -47,5 +48,5 @@ Catch {
 Finally {
     # Optional cleanup
     if (Test-Path $ZipPath) { Remove-Item $ZipPath -Force }
-    # keep extracted files in case you want to troubleshoot
+    # Keep extracted files in case you want to troubleshoot
 }
