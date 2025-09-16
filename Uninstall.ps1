@@ -1,8 +1,3 @@
-<# 
-Uninstall-Automate.ps1
-Automates ConnectWise Automate Agent removal
-#>
-
 $DownloadUrl   = "https://s3.amazonaws.com/assets-cp/assets/Agent_Uninstaller.zip"
 $ZipPath       = "$env:TEMP\Agent_Uninstaller.zip"
 $ExtractPath   = "$env:TEMP\AutomateUninstall"
@@ -22,31 +17,43 @@ Try {
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractPath)
 
-    Write-Host "Searching for Agent_Uninstaller.exe..."
-    $AgentUninstaller = Get-ChildItem -Path $ExtractPath -Recurse -Filter "Agent_Uninstaller.exe" | Select-Object -First 1
+    Write-Host "Searching for executable containing 'uninstall'..."
+    $ExeFile = Get-ChildItem -Path $ExtractPath -Recurse -Filter *.exe |
+               Where-Object { $_.Name -match "uninstall" } |
+               Select-Object -First 1
 
-    if (-not $AgentUninstaller) {
-        Throw "Agent_Uninstaller.exe not found anywhere under $ExtractPath"
+    if (-not $ExeFile) {
+        Throw "No uninstall executable found in $ExtractPath"
     }
 
-    Write-Host "Launching Agent_Uninstaller.exe (non-blocking)..."
-    Start-Process -FilePath $AgentUninstaller.FullName -WindowStyle Hidden
+    Write-Host "Found executable: $($ExeFile.FullName)"
+    
+    # If it's Agent_Uninstaller.exe, run it first
+    if ($ExeFile.Name -match "Agent_Uninstaller") {
+        Write-Host "Running Agent_Uninstaller.exe (non-blocking)..."
+        Start-Process -FilePath $ExeFile.FullName -WindowStyle Hidden
 
-    # Wait until uninstall.exe is created
-    Write-Host "Waiting for uninstall.exe to appear..."
-    $timeout = (Get-Date).AddMinutes(2)
-    $UninstallEXE = $null
+        # Wait for uninstall.exe
+        Write-Host "Waiting for uninstall.exe to appear..."
+        $timeout = (Get-Date).AddMinutes(2)
+        $UninstallEXE = $null
 
-    while (-not $UninstallEXE) {
-        Start-Sleep -Seconds 2
-        $UninstallEXE = Get-ChildItem -Path $ExtractPath -Recurse -Filter "uninstall.exe" | Select-Object -First 1
-        if ((Get-Date) -gt $timeout) {
-            Throw "Timed out waiting for uninstall.exe to be created."
+        while (-not $UninstallEXE) {
+            Start-Sleep -Seconds 2
+            $UninstallEXE = Get-ChildItem -Path $ExtractPath -Recurse -Filter "uninstall.exe" | Select-Object -First 1
+            if ((Get-Date) -gt $timeout) {
+                Throw "Timed out waiting for uninstall.exe to be created."
+            }
         }
-    }
 
-    Write-Host "Running uninstall.exe silently..."
-    Start-Process -FilePath $UninstallEXE.FullName -ArgumentList "/S" -Wait -NoNewWindow
+        Write-Host "Running uninstall.exe silently..."
+        Start-Process -FilePath $UninstallEXE.FullName -ArgumentList "/S" -Wait -NoNewWindow
+    }
+    else {
+        # If the exe already is uninstall.exe, just run it
+        Write-Host "Running uninstall.exe directly..."
+        Start-Process -FilePath $ExeFile.FullName -ArgumentList "/S" -Wait -NoNewWindow
+    }
 
     # Verify Automate service is gone
     Start-Sleep -Seconds 5
@@ -62,5 +69,5 @@ Catch {
 }
 Finally {
     if (Test-Path $ZipPath) { Remove-Item $ZipPath -Force }
-    # keep ExtractPath for logs/debugging
+    # optionally keep $ExtractPath for logs
 }
