@@ -19,7 +19,7 @@ Write-Host -Fore Red "Errorcode: " $process.ExitCode
 <# End of NetFrame Work Install #>
 
 <# Install Automate#>
-$DownloadPath = "https://github.com/LesSolutionOneSky/Automate/raw/main/Agent_Install.msi"
+$DownloadPath = "https://onesky.hostedrmm.com/LabTech/Deployment.aspx?InstallerToken=80010c7ce06e4584b5bf75fc88e1fbd2"
 $SoftwarePath = "C:\Temp\Automate_Agent.msi"
 
     Write-Host "Downloading from: $($DownloadPath)"
