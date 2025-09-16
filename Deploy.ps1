@@ -29,4 +29,3 @@ $SoftwarePath = "C:\Temp\Automate_Agent.msi"
     Write-Host "Download Complete"
 
 Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$SoftwarePath`" /quiet /norestart" -Wait -Verb RunAs -PassThru
-
