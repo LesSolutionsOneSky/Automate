@@ -22,28 +22,31 @@ Try {
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractPath)
 
-    $AgentUninstaller = Join-Path $ExtractPath "Agent_Uninstaller.exe"
-    if (-not (Test-Path $AgentUninstaller)) {
-        Throw "Agent_Uninstaller.exe not found in $ExtractPath"
+    Write-Host "Searching for Agent_Uninstaller.exe..."
+    $AgentUninstaller = Get-ChildItem -Path $ExtractPath -Recurse -Filter "Agent_Uninstaller.exe" | Select-Object -First 1
+
+    if (-not $AgentUninstaller) {
+        Throw "Agent_Uninstaller.exe not found anywhere under $ExtractPath"
     }
 
     Write-Host "Launching Agent_Uninstaller.exe (non-blocking)..."
-    Start-Process -FilePath $AgentUninstaller -WindowStyle Hidden
+    Start-Process -FilePath $AgentUninstaller.FullName -WindowStyle Hidden
 
     # Wait until uninstall.exe is created
     Write-Host "Waiting for uninstall.exe to appear..."
-    $UninstallEXE = Join-Path $ExtractPath "uninstall.exe"
     $timeout = (Get-Date).AddMinutes(2)
+    $UninstallEXE = $null
 
-    while (-not (Test-Path $UninstallEXE)) {
+    while (-not $UninstallEXE) {
         Start-Sleep -Seconds 2
+        $UninstallEXE = Get-ChildItem -Path $ExtractPath -Recurse -Filter "uninstall.exe" | Select-Object -First 1
         if ((Get-Date) -gt $timeout) {
             Throw "Timed out waiting for uninstall.exe to be created."
         }
     }
 
     Write-Host "Running uninstall.exe silently..."
-    Start-Process -FilePath $UninstallEXE -ArgumentList "/S" -Wait -NoNewWindow
+    Start-Process -FilePath $UninstallEXE.FullName -ArgumentList "/S" -Wait -NoNewWindow
 
     # Verify Automate service is gone
     Start-Sleep -Seconds 5
