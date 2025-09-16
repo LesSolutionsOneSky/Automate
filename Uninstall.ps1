@@ -5,7 +5,7 @@ Automates ConnectWise Automate Agent removal
 
 # Variables
 $DownloadUrl   = "https://s3.amazonaws.com/assets-cp/assets/Agent_Uninstaller.zip"
-$ZipPath       = "$env:TEMP\Agent_Uninstaller.zip"
+$ZipPath       = "$env:TEMP\Agent_Uninstall.zip"
 $ExtractPath   = "$env:TEMP\AutomateUninstall"
 
 Try {
