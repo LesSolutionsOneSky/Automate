@@ -16,13 +16,18 @@ Try {
     if (Test-Path $ZipPath) { Remove-Item $ZipPath -Force }
     if (Test-Path $ExtractPath) { Remove-Item $ExtractPath -Recurse -Force }
 
-    Write-Host "Downloading Automate ZIP..."
-    Invoke-WebRequest -Uri $DownloadUrl -OutFile $ZipPath -UseBasicParsing
+    # Download ZIP as binary
+    Invoke-WebRequest -Uri $ZipUrl -OutFile $ZipPath -UseBasicParsing
 
+    # Verify file size (optional)
+    Write-Host "Downloaded file size: $((Get-Item $ZipPath).Length) bytes"
+
+    # Extract ZIP
     Write-Host "Extracting ZIP with .NET..."
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractPath)
 
+    # Run the BAT inside
     Write-Host "Looking for batch file..."
     $BatFile = Get-ChildItem -Path $ExtractPath -Filter *.bat | Select-Object -First 1
 
