@@ -4,7 +4,7 @@ Automated deployment of ConnectWise Automate Agent
 #>
 
 # Variables
-$DownloadUrl   = "https://raw.githubusercontent.com/LesSolutionsOneSky/Automate/main/Agent_Install.zip"   # <-- replace with your real Automate ZIP URL
+$DownloadUrl   = "https://raw.githubusercontent.com/LesSolutionsOneSky/Automate/main/Agent_Install.zip"
 $ZipPath       = "$env:TEMP\AutomateDeploy.zip"
 $ExtractPath   = "$env:TEMP\AutomateDeploy"
 
@@ -16,18 +16,12 @@ Try {
     if (Test-Path $ZipPath) { Remove-Item $ZipPath -Force }
     if (Test-Path $ExtractPath) { Remove-Item $ExtractPath -Recurse -Force }
 
-    # Download ZIP as binary
+    Write-Host "Downloading Automate ZIP..."
     Invoke-WebRequest -Uri $DownloadUrl -OutFile $ZipPath -UseBasicParsing
 
-    # Verify file size (optional)
-    Write-Host "Downloaded file size: $((Get-Item $ZipPath).Length) bytes"
+    Write-Host "Extracting ZIP..."
+    Expand-Archive -Path $ZipPath -DestinationPath $ExtractPath -Force
 
-    # Extract ZIP
-    Write-Host "Extracting ZIP with .NET..."
-    Add-Type -AssemblyName System.IO.Compression.FileSystem
-    [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $ExtractPath)
-
-    # Run the BAT inside
     Write-Host "Looking for batch file..."
     $BatFile = Get-ChildItem -Path $ExtractPath -Filter *.bat | Select-Object -First 1
 
@@ -53,5 +47,5 @@ Catch {
 Finally {
     # Optional cleanup
     if (Test-Path $ZipPath) { Remove-Item $ZipPath -Force }
-    # Keep extracted files in case you want to troubleshoot
+    # keep extracted files in case you want to troubleshoot
 }
