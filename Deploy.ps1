@@ -17,7 +17,7 @@ Try {
     if (Test-Path $ExtractPath) { Remove-Item $ExtractPath -Recurse -Force }
 
     # Download ZIP as binary
-    Invoke-WebRequest -Uri $ZipUrl -OutFile $ZipPath -UseBasicParsing
+    Invoke-WebRequest -Uri $DownloadUrl -OutFile $ZipPath -UseBasicParsing
 
     # Verify file size (optional)
     Write-Host "Downloaded file size: $((Get-Item $ZipPath).Length) bytes"
