@@ -4,7 +4,7 @@ Automated deployment of ConnectWise Automate Agent
 #>
 
 # Variables
-$DownloadUrl   = "https://github.com/LesSolutionsOneSky/Automate/blob/main/Agent_Install.zip"   # <-- replace with your real Automate ZIP URL
+$DownloadUrl   = "https://github.com/LesSolutionsOneSky/Automate/raw/refs/heads/main/Agent_Install.msi"   # <-- replace with your real Automate ZIP URL
 $ZipPath       = "$env:TEMP\AutomateDeploy.zip"
 $ExtractPath   = "$env:TEMP\AutomateDeploy"
 
